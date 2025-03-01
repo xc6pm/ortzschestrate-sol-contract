@@ -1,0 +1,27 @@
+{
+  "name": "ortzschetrate-contracts",
+  "version": "1.0.0",
+  "scripts": {
+    "chain": "hardhat node --network hardhat --no-deploy",
+    "compile": "hardhat compile",
+    "deploy": "ts-node scripts/runHardhatDeploy.ts"
+  },
+  "main": "index.js",
+  "repository": "https://github.com/xc6pm/ortzschestrate",
+  "author": "Hossein Ebrahimi",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "~3.0.8",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@openzeppelin/contracts": "^5.2.0",
+    "@openzeppelin/hardhat-upgrades": "^3.9.0",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.13.5",
+    "hardhat": "^2.22.18",
+    "hardhat-deploy": "^0.14.0",
+    "hardhat-deploy-ethers": "^0.4.2",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

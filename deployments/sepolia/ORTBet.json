@@ -1,0 +1,611 @@
+{
+  "address": "0x58B5C7F4676ad242f007e6D03d378aDD305b598f",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "gameId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum ORTBet.GameResult",
+          "name": "result",
+          "type": "uint8"
+        }
+      ],
+      "name": "GameResolved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "gameId",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "player1",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "player2",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "stakeAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "GameStarted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "StakesDeposited",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "StakesLocked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "StakesUnlocked",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "StakesWithdrawn",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "depositStakes",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "name": "games",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "player1",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "player2",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "stakeAmount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "active",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_gameId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getGame",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "player1",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "player2",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "stakeAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "active",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct ORTBet.Game",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getLockedStake",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "lockedStakes",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_gameId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "enum ORTBet.GameResult",
+          "name": "_result",
+          "type": "uint8"
+        }
+      ],
+      "name": "resolveGame",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_gameId",
+          "type": "string"
+        },
+        {
+          "internalType": "address",
+          "name": "_player1",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_player2",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_stakeAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "startGame",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "userBalances",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawStakes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "stateMutability": "payable",
+      "type": "receive"
+    }
+  ],
+  "transactionHash": "0x0b64604c6feccb5f4a63200c5ab1907600863c99310e231ed421a00c4f50f35f",
+  "receipt": {
+    "to": null,
+    "from": "0xB1A5A3B36213889C29738bbe1f83b3983FfE46e5",
+    "contractAddress": "0x58B5C7F4676ad242f007e6D03d378aDD305b598f",
+    "transactionIndex": 102,
+    "gasUsed": "998515",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001002000000000000000000000000000000000020000000000000000000c00000000000000000040000000000000400000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000000000000000000000000020000000000000800000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xb98f81e97afbbde285af50896e4062f47699d47c7ee4af99f6f6f9b115530a2f",
+    "transactionHash": "0x0b64604c6feccb5f4a63200c5ab1907600863c99310e231ed421a00c4f50f35f",
+    "logs": [
+      {
+        "transactionIndex": 102,
+        "blockNumber": 7651936,
+        "transactionHash": "0x0b64604c6feccb5f4a63200c5ab1907600863c99310e231ed421a00c4f50f35f",
+        "address": "0x58B5C7F4676ad242f007e6D03d378aDD305b598f",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x000000000000000000000000b1a5a3b36213889c29738bbe1f83b3983ffe46e5"
+        ],
+        "data": "0x",
+        "logIndex": 327,
+        "blockHash": "0xb98f81e97afbbde285af50896e4062f47699d47c7ee4af99f6f6f9b115530a2f"
+      }
+    ],
+    "blockNumber": 7651936,
+    "cumulativeGasUsed": "15780183",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "26c53c3dc562713d973a6aa507dbada5",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.28+commit.7893614a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnableInvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"OwnableUnauthorizedAccount\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"gameId\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"enum ORTBet.GameResult\",\"name\":\"result\",\"type\":\"uint8\"}],\"name\":\"GameResolved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"gameId\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"player1\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"player2\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"stakeAmount\",\"type\":\"uint256\"}],\"name\":\"GameStarted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"StakesDeposited\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"StakesLocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"StakesUnlocked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"StakesWithdrawn\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"depositStakes\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"games\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"player1\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"player2\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"stakeAmount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_userAddress\",\"type\":\"address\"}],\"name\":\"getBalance\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_gameId\",\"type\":\"bytes32\"}],\"name\":\"getGame\",\"outputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"player1\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"player2\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"stakeAmount\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"active\",\"type\":\"bool\"}],\"internalType\":\"struct ORTBet.Game\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_userAddress\",\"type\":\"address\"}],\"name\":\"getLockedStake\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"lockedStakes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"_gameId\",\"type\":\"bytes32\"},{\"internalType\":\"enum ORTBet.GameResult\",\"name\":\"_result\",\"type\":\"uint8\"}],\"name\":\"resolveGame\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_gameId\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_player1\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_player2\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_stakeAmount\",\"type\":\"uint256\"}],\"name\":\"startGame\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"userBalances\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdrawStakes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"errors\":{\"OwnableInvalidOwner(address)\":[{\"details\":\"The owner is not a valid owner account. (eg. `address(0)`)\"}],\"OwnableUnauthorizedAccount(address)\":[{\"details\":\"The caller account is not authorized to perform an operation.\"}]},\"kind\":\"dev\",\"methods\":{\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/ORTBet.sol\":\"ORTBet\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.20;\\n\\nimport {Context} from \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * The initial owner is set to the address provided by the deployer. This can\\n * later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    /**\\n     * @dev The caller account is not authorized to perform an operation.\\n     */\\n    error OwnableUnauthorizedAccount(address account);\\n\\n    /**\\n     * @dev The owner is not a valid owner account. (eg. `address(0)`)\\n     */\\n    error OwnableInvalidOwner(address owner);\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the address provided by the deployer as the initial owner.\\n     */\\n    constructor(address initialOwner) {\\n        if (initialOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(initialOwner);\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        if (owner() != _msgSender()) {\\n            revert OwnableUnauthorizedAccount(_msgSender());\\n        }\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        if (newOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    function _contextSuffixLength() internal view virtual returns (uint256) {\\n        return 0;\\n    }\\n}\\n\",\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\"},\"contracts/ORTBet.sol\":{\"content\":\"// SPDX-License-Identifier: UNLICENSED\\npragma solidity ^0.8.10;\\n\\nimport \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\n\\ncontract ORTBet is Ownable {\\n    mapping(address => uint256) public userBalances;\\n    mapping(address => uint256) public lockedStakes;\\n    mapping(bytes32 => Game) public games;\\n\\n    event StakesDeposited(address indexed player, uint256 amount);\\n    event StakesWithdrawn(address indexed player, uint256 amount);\\n    event StakesLocked(address indexed player, uint256 amount);\\n    event StakesUnlocked(address indexed player, uint256 amount);\\n    event GameStarted(\\n        bytes32 indexed gameId,\\n        address indexed player1,\\n        address indexed player2,\\n        uint256 stakeAmount\\n    );\\n    event GameResolved(bytes32 indexed gameId, GameResult result);\\n\\n    enum GameResult {\\n        Draw,\\n        Player1Won,\\n        Player2Won\\n    }\\n\\n    struct Game {\\n        address player1;\\n        address player2;\\n        uint256 stakeAmount;\\n        bool active;\\n    }\\n\\n    constructor() Ownable(msg.sender) {}\\n\\n    function depositStakes() external payable {\\n        require(msg.value > 0, \\\"Deposit amount must be greater than 0.\\\");\\n        userBalances[msg.sender] += msg.value;\\n        emit StakesDeposited(msg.sender, msg.value);\\n    }\\n\\n    function withdrawStakes(uint256 amount) external {\\n        require(amount > 0, \\\"Withdrawal amount must be greater than 0.\\\");\\n        require(\\n            userBalances[msg.sender] >= amount,\\n            \\\"Insufficient funds to withdraw.\\\"\\n        );\\n\\n        userBalances[msg.sender] -= amount;\\n        payable(msg.sender).transfer(amount);\\n        emit StakesWithdrawn(msg.sender, amount);\\n    }\\n\\n    function startGame(\\n        string calldata _gameId,\\n        address _player1,\\n        address _player2,\\n        uint256 _stakeAmount\\n    ) external onlyOwner {\\n        bytes32 gameIdHash = keccak256(abi.encodePacked(_gameId));\\n        // Checking stakeAmount just to see if the struct was initiated before.\\n        require(games[gameIdHash].stakeAmount == 0, \\\"Game ID already exists.\\\");\\n        require(\\n            _player1 != address(0) && _player2 != address(0),\\n            \\\"Invalid player address.\\\"\\n        );\\n        require(_stakeAmount > 0, \\\"_stakeAmount must be greater than 0.\\\");\\n        require(\\n            userBalances[_player1] >= _stakeAmount,\\n            \\\"Player1 has insufficient funds.\\\"\\n        );\\n        require(\\n            userBalances[_player2] >= _stakeAmount,\\n            \\\"Player2 has insufficient funds.\\\"\\n        );\\n\\n        // Lock stakes\\n        userBalances[_player1] -= _stakeAmount;\\n        userBalances[_player2] -= _stakeAmount;\\n        lockedStakes[_player1] += _stakeAmount;\\n        lockedStakes[_player2] += _stakeAmount;\\n\\n        games[gameIdHash] = Game({\\n            player1: _player1,\\n            player2: _player2,\\n            stakeAmount: _stakeAmount,\\n            active: true\\n        });\\n\\n        emit StakesLocked(_player1, _stakeAmount);\\n        emit StakesLocked(_player2, _stakeAmount);\\n        emit GameStarted(gameIdHash, _player1, _player2, _stakeAmount);\\n    }\\n\\n    function resolveGame(\\n        bytes32 _gameId,\\n        GameResult _result\\n    ) external onlyOwner {\\n        require(\\n            games[_gameId].active,\\n            \\\"Game either not created or is already finished.\\\"\\n        );\\n        Game storage game = games[_gameId];\\n\\n        lockedStakes[game.player1] -= game.stakeAmount;\\n        lockedStakes[game.player2] -= game.stakeAmount;\\n\\n        if (_result == GameResult.Player1Won) {\\n            // Transfer stakes to player 1\\n            userBalances[game.player1] += game.stakeAmount * 2;\\n            emit StakesUnlocked(game.player1, game.stakeAmount * 2);\\n        } else if (_result == GameResult.Player2Won) {\\n            // Transfer stakes to player 2\\n            userBalances[game.player2] += game.stakeAmount * 2;\\n            emit StakesUnlocked(game.player2, game.stakeAmount * 2);\\n        } else if (_result == GameResult.Draw) {\\n            // Refund both players\\n            userBalances[game.player1] += game.stakeAmount;\\n            userBalances[game.player2] += game.stakeAmount;\\n            emit StakesUnlocked(game.player1, game.stakeAmount);\\n            emit StakesUnlocked(game.player2, game.stakeAmount);\\n        }\\n\\n        game.active = false;\\n\\n        // Emit the game resolved event\\n        emit GameResolved(_gameId, _result);\\n    }\\n\\n    receive() external payable {\\n        revert(\\\"Direct deposits not allowed.\\\");\\n    }\\n\\n    function getBalance(address _userAddress) external view returns (uint256) {\\n        return userBalances[_userAddress];\\n    }\\n\\n    function getLockedStake(\\n        address _userAddress\\n    ) external view returns (uint256) {\\n        return lockedStakes[_userAddress];\\n    }\\n\\n    function getGame(bytes32 _gameId) external view returns (Game memory) {\\n        return games[_gameId];\\n    }\\n}\\n\",\"keccak256\":\"0xe23c183d32a5059b12fe1d6fe141f6f501df35a31a7b04aab379ae94f10c8e2b\",\"license\":\"UNLICENSED\"}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b503380603557604051631e4fbdf760e01b81526000600482015260240160405180910390fd5b603c816041565b506091565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6110a1806100a06000396000f3fe6080604052600436106100c65760003560e01c80638da5cb5b1161007f578063e703dd5411610059578063e703dd541461031c578063f2fde38b1461033c578063f579f8821461035c578063f8b2cb4f146103dd57600080fd5b80638da5cb5b1461029157806392417dc7146102b95780639e2c63da146102e657600080fd5b80632177457d1461011d57806326224c64146101275780632f78808c14610167578063410390ec14610187578063715018a6146101a757806373931bbf146101bc57600080fd5b366101185760405162461bcd60e51b815260206004820152601c60248201527f446972656374206465706f73697473206e6f7420616c6c6f7765642e0000000060448201526064015b60405180910390fd5b600080fd5b610125610413565b005b34801561013357600080fd5b50610154610142366004610e99565b60016020526000908152604090205481565b6040519081526020015b60405180910390f35b34801561017357600080fd5b50610125610182366004610ebb565b6104cd565b34801561019357600080fd5b506101256101a2366004610f57565b610907565b3480156101b357600080fd5b50610125610a52565b3480156101c857600080fd5b5061024e6101d7366004610f57565b60408051608081018252600080825260208201819052918101829052606081019190915250600090815260036020818152604092839020835160808101855281546001600160a01b0390811682526001830154169281019290925260028101549382019390935291015460ff161515606082015290565b60405161015e919081516001600160a01b039081168252602080840151909116908201526040808301519082015260609182015115159181019190915260800190565b34801561029d57600080fd5b506000546040516001600160a01b03909116815260200161015e565b3480156102c557600080fd5b506101546102d4366004610e99565b60026020526000908152604090205481565b3480156102f257600080fd5b50610154610301366004610e99565b6001600160a01b031660009081526002602052604090205490565b34801561032857600080fd5b50610125610337366004610f70565b610a66565b34801561034857600080fd5b50610125610357366004610e99565b610dc2565b34801561036857600080fd5b506103b0610377366004610f57565b600360208190526000918252604090912080546001820154600283015492909301546001600160a01b0391821693909116919060ff1684565b604080516001600160a01b039586168152949093166020850152918301521515606082015260800161015e565b3480156103e957600080fd5b506101546103f8366004610e99565b6001600160a01b031660009081526001602052604090205490565b600034116104725760405162461bcd60e51b815260206004820152602660248201527f4465706f73697420616d6f756e74206d757374206265206772656174657220746044820152653430b710181760d11b606482015260840161010f565b3360009081526001602052604081208054349290610491908490610fba565b909155505060405134815233907f8a84d5a52e90630e4ce7bdb59bd09c7f9345a27ba7c417b08682fae34ad142d59060200160405180910390a2565b6104d5610e00565b600085856040516020016104ea929190610fd3565b60408051601f19818403018152918152815160209283012060008181526003909352912060020154909150156105625760405162461bcd60e51b815260206004820152601760248201527f47616d6520494420616c7265616479206578697374732e000000000000000000604482015260640161010f565b6001600160a01b0384161580159061058257506001600160a01b03831615155b6105ce5760405162461bcd60e51b815260206004820152601760248201527f496e76616c696420706c6179657220616464726573732e000000000000000000604482015260640161010f565b6000821161062a5760405162461bcd60e51b8152602060048201526024808201527f5f7374616b65416d6f756e74206d7573742062652067726561746572207468616044820152633710181760e11b606482015260840161010f565b6001600160a01b0384166000908152600160205260409020548211156106925760405162461bcd60e51b815260206004820152601f60248201527f506c61796572312068617320696e73756666696369656e742066756e64732e00604482015260640161010f565b6001600160a01b0383166000908152600160205260409020548211156106fa5760405162461bcd60e51b815260206004820152601f60248201527f506c61796572322068617320696e73756666696369656e742066756e64732e00604482015260640161010f565b6001600160a01b03841660009081526001602052604081208054849290610722908490610fe3565b90915550506001600160a01b0383166000908152600160205260408120805484929061074f908490610fe3565b90915550506001600160a01b0384166000908152600260205260408120805484929061077c908490610fba565b90915550506001600160a01b038316600090815260026020526040812080548492906107a9908490610fba565b9091555050604080516080810182526001600160a01b03808716808352868216602080850191825284860188815260016060870181815260008a8152600394859052899020975188549088166001600160a01b031991821617895594519188018054929097169190941617909455925160028501555192909101805492151560ff199093169290921790915590517f41375446217eacab943f69f43e90965cbed73a9648b36f7c1276c8e76bb67bad906108669085815260200190565b60405180910390a2826001600160a01b03167f41375446217eacab943f69f43e90965cbed73a9648b36f7c1276c8e76bb67bad836040516108a991815260200190565b60405180910390a2826001600160a01b0316846001600160a01b0316827fca5be7d622fe97529270450062762f9bac7e27828ef7b8658af85234f44146cd856040516108f791815260200190565b60405180910390a4505050505050565b600081116109695760405162461bcd60e51b815260206004820152602960248201527f5769746864726177616c20616d6f756e74206d7573742062652067726561746560448201526839103a3430b710181760b91b606482015260840161010f565b336000908152600160205260409020548111156109c85760405162461bcd60e51b815260206004820152601f60248201527f496e73756666696369656e742066756e647320746f2077697468647261772e00604482015260640161010f565b33600090815260016020526040812080548392906109e7908490610fe3565b9091555050604051339082156108fc029083906000818181858888f19350505050158015610a19573d6000803e3d6000fd5b5060405181815233907f75ded28a7f8d2c34347ec4a9961ec6edff2da2e8a30f2988131f68b61d806b7b9060200160405180910390a250565b610a5a610e00565b610a646000610e2d565b565b610a6e610e00565b6000828152600360208190526040909120015460ff16610ae85760405162461bcd60e51b815260206004820152602f60248201527f47616d6520656974686572206e6f742063726561746564206f7220697320616c60448201526e3932b0b23c903334b734b9b432b21760891b606482015260840161010f565b600082815260036020908152604080832060028082015482546001600160a01b031686529352908320805491939091610b22908490610fe3565b909155505060028082015460018301546001600160a01b0316600090815260209290925260408220805491929091610b5b908490610fe3565b9091555060019050826002811115610b7557610b75610ff6565b03610bfb57600280820154610b899161100c565b81546001600160a01b031660009081526001602052604081208054909190610bb2908490610fba565b909155505080546002808301546001600160a01b039092169160008051602061104c83398151915291610be5919061100c565b60405190815260200160405180910390a2610d77565b6002826002811115610c0f57610c0f610ff6565b03610c8757600280820154610c239161100c565b6001828101546001600160a01b03166000908152602091909152604081208054909190610c51908490610fba565b909155505060018101546002808301546001600160a01b039092169160008051602061104c83398151915291610be5919061100c565b6000826002811115610c9b57610c9b610ff6565b03610d7757600281015481546001600160a01b031660009081526001602052604081208054909190610cce908490610fba565b909155505060028101546001808301546001600160a01b03166000908152602091909152604081208054909190610d06908490610fba565b9091555050805460028201546040519081526001600160a01b039091169060008051602061104c8339815191529060200160405180910390a2600181015460028201546040519081526001600160a01b039091169060008051602061104c8339815191529060200160405180910390a25b60038101805460ff1916905560405183907f84084530ad38987aaa9b1454bf4cbc496558210efbfe8ec98c3a6879f4e9a38a90610db5908590611023565b60405180910390a2505050565b610dca610e00565b6001600160a01b038116610df457604051631e4fbdf760e01b81526000600482015260240161010f565b610dfd81610e2d565b50565b6000546001600160a01b03163314610a645760405163118cdaa760e01b815233600482015260240161010f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b80356001600160a01b0381168114610e9457600080fd5b919050565b600060208284031215610eab57600080fd5b610eb482610e7d565b9392505050565b600080600080600060808688031215610ed357600080fd5b853567ffffffffffffffff811115610eea57600080fd5b8601601f81018813610efb57600080fd5b803567ffffffffffffffff811115610f1257600080fd5b886020828401011115610f2457600080fd5b602091820196509450610f38908701610e7d565b9250610f4660408701610e7d565b949793965091946060013592915050565b600060208284031215610f6957600080fd5b5035919050565b60008060408385031215610f8357600080fd5b82359150602083013560038110610f9957600080fd5b809150509250929050565b634e487b7160e01b600052601160045260246000fd5b80820180821115610fcd57610fcd610fa4565b92915050565b8183823760009101908152919050565b81810381811115610fcd57610fcd610fa4565b634e487b7160e01b600052602160045260246000fd5b8082028115828204841417610fcd57610fcd610fa4565b602081016003831061104557634e487b7160e01b600052602160045260246000fd5b9190529056fe68510e4a026e1e6eb57d0691a8904192605ae5f5c8c1e0c878bcfd8299f56132a26469706673582212201fbad578206d509b27c941e7a2e1ecffc93fe55bca96a521c72160d6d001f61264736f6c634300081c0033",
+  "deployedBytecode": "0x6080604052600436106100c65760003560e01c80638da5cb5b1161007f578063e703dd5411610059578063e703dd541461031c578063f2fde38b1461033c578063f579f8821461035c578063f8b2cb4f146103dd57600080fd5b80638da5cb5b1461029157806392417dc7146102b95780639e2c63da146102e657600080fd5b80632177457d1461011d57806326224c64146101275780632f78808c14610167578063410390ec14610187578063715018a6146101a757806373931bbf146101bc57600080fd5b366101185760405162461bcd60e51b815260206004820152601c60248201527f446972656374206465706f73697473206e6f7420616c6c6f7765642e0000000060448201526064015b60405180910390fd5b600080fd5b610125610413565b005b34801561013357600080fd5b50610154610142366004610e99565b60016020526000908152604090205481565b6040519081526020015b60405180910390f35b34801561017357600080fd5b50610125610182366004610ebb565b6104cd565b34801561019357600080fd5b506101256101a2366004610f57565b610907565b3480156101b357600080fd5b50610125610a52565b3480156101c857600080fd5b5061024e6101d7366004610f57565b60408051608081018252600080825260208201819052918101829052606081019190915250600090815260036020818152604092839020835160808101855281546001600160a01b0390811682526001830154169281019290925260028101549382019390935291015460ff161515606082015290565b60405161015e919081516001600160a01b039081168252602080840151909116908201526040808301519082015260609182015115159181019190915260800190565b34801561029d57600080fd5b506000546040516001600160a01b03909116815260200161015e565b3480156102c557600080fd5b506101546102d4366004610e99565b60026020526000908152604090205481565b3480156102f257600080fd5b50610154610301366004610e99565b6001600160a01b031660009081526002602052604090205490565b34801561032857600080fd5b50610125610337366004610f70565b610a66565b34801561034857600080fd5b50610125610357366004610e99565b610dc2565b34801561036857600080fd5b506103b0610377366004610f57565b600360208190526000918252604090912080546001820154600283015492909301546001600160a01b0391821693909116919060ff1684565b604080516001600160a01b039586168152949093166020850152918301521515606082015260800161015e565b3480156103e957600080fd5b506101546103f8366004610e99565b6001600160a01b031660009081526001602052604090205490565b600034116104725760405162461bcd60e51b815260206004820152602660248201527f4465706f73697420616d6f756e74206d757374206265206772656174657220746044820152653430b710181760d11b606482015260840161010f565b3360009081526001602052604081208054349290610491908490610fba565b909155505060405134815233907f8a84d5a52e90630e4ce7bdb59bd09c7f9345a27ba7c417b08682fae34ad142d59060200160405180910390a2565b6104d5610e00565b600085856040516020016104ea929190610fd3565b60408051601f19818403018152918152815160209283012060008181526003909352912060020154909150156105625760405162461bcd60e51b815260206004820152601760248201527f47616d6520494420616c7265616479206578697374732e000000000000000000604482015260640161010f565b6001600160a01b0384161580159061058257506001600160a01b03831615155b6105ce5760405162461bcd60e51b815260206004820152601760248201527f496e76616c696420706c6179657220616464726573732e000000000000000000604482015260640161010f565b6000821161062a5760405162461bcd60e51b8152602060048201526024808201527f5f7374616b65416d6f756e74206d7573742062652067726561746572207468616044820152633710181760e11b606482015260840161010f565b6001600160a01b0384166000908152600160205260409020548211156106925760405162461bcd60e51b815260206004820152601f60248201527f506c61796572312068617320696e73756666696369656e742066756e64732e00604482015260640161010f565b6001600160a01b0383166000908152600160205260409020548211156106fa5760405162461bcd60e51b815260206004820152601f60248201527f506c61796572322068617320696e73756666696369656e742066756e64732e00604482015260640161010f565b6001600160a01b03841660009081526001602052604081208054849290610722908490610fe3565b90915550506001600160a01b0383166000908152600160205260408120805484929061074f908490610fe3565b90915550506001600160a01b0384166000908152600260205260408120805484929061077c908490610fba565b90915550506001600160a01b038316600090815260026020526040812080548492906107a9908490610fba565b9091555050604080516080810182526001600160a01b03808716808352868216602080850191825284860188815260016060870181815260008a8152600394859052899020975188549088166001600160a01b031991821617895594519188018054929097169190941617909455925160028501555192909101805492151560ff199093169290921790915590517f41375446217eacab943f69f43e90965cbed73a9648b36f7c1276c8e76bb67bad906108669085815260200190565b60405180910390a2826001600160a01b03167f41375446217eacab943f69f43e90965cbed73a9648b36f7c1276c8e76bb67bad836040516108a991815260200190565b60405180910390a2826001600160a01b0316846001600160a01b0316827fca5be7d622fe97529270450062762f9bac7e27828ef7b8658af85234f44146cd856040516108f791815260200190565b60405180910390a4505050505050565b600081116109695760405162461bcd60e51b815260206004820152602960248201527f5769746864726177616c20616d6f756e74206d7573742062652067726561746560448201526839103a3430b710181760b91b606482015260840161010f565b336000908152600160205260409020548111156109c85760405162461bcd60e51b815260206004820152601f60248201527f496e73756666696369656e742066756e647320746f2077697468647261772e00604482015260640161010f565b33600090815260016020526040812080548392906109e7908490610fe3565b9091555050604051339082156108fc029083906000818181858888f19350505050158015610a19573d6000803e3d6000fd5b5060405181815233907f75ded28a7f8d2c34347ec4a9961ec6edff2da2e8a30f2988131f68b61d806b7b9060200160405180910390a250565b610a5a610e00565b610a646000610e2d565b565b610a6e610e00565b6000828152600360208190526040909120015460ff16610ae85760405162461bcd60e51b815260206004820152602f60248201527f47616d6520656974686572206e6f742063726561746564206f7220697320616c60448201526e3932b0b23c903334b734b9b432b21760891b606482015260840161010f565b600082815260036020908152604080832060028082015482546001600160a01b031686529352908320805491939091610b22908490610fe3565b909155505060028082015460018301546001600160a01b0316600090815260209290925260408220805491929091610b5b908490610fe3565b9091555060019050826002811115610b7557610b75610ff6565b03610bfb57600280820154610b899161100c565b81546001600160a01b031660009081526001602052604081208054909190610bb2908490610fba565b909155505080546002808301546001600160a01b039092169160008051602061104c83398151915291610be5919061100c565b60405190815260200160405180910390a2610d77565b6002826002811115610c0f57610c0f610ff6565b03610c8757600280820154610c239161100c565b6001828101546001600160a01b03166000908152602091909152604081208054909190610c51908490610fba565b909155505060018101546002808301546001600160a01b039092169160008051602061104c83398151915291610be5919061100c565b6000826002811115610c9b57610c9b610ff6565b03610d7757600281015481546001600160a01b031660009081526001602052604081208054909190610cce908490610fba565b909155505060028101546001808301546001600160a01b03166000908152602091909152604081208054909190610d06908490610fba565b9091555050805460028201546040519081526001600160a01b039091169060008051602061104c8339815191529060200160405180910390a2600181015460028201546040519081526001600160a01b039091169060008051602061104c8339815191529060200160405180910390a25b60038101805460ff1916905560405183907f84084530ad38987aaa9b1454bf4cbc496558210efbfe8ec98c3a6879f4e9a38a90610db5908590611023565b60405180910390a2505050565b610dca610e00565b6001600160a01b038116610df457604051631e4fbdf760e01b81526000600482015260240161010f565b610dfd81610e2d565b50565b6000546001600160a01b03163314610a645760405163118cdaa760e01b815233600482015260240161010f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b80356001600160a01b0381168114610e9457600080fd5b919050565b600060208284031215610eab57600080fd5b610eb482610e7d565b9392505050565b600080600080600060808688031215610ed357600080fd5b853567ffffffffffffffff811115610eea57600080fd5b8601601f81018813610efb57600080fd5b803567ffffffffffffffff811115610f1257600080fd5b886020828401011115610f2457600080fd5b602091820196509450610f38908701610e7d565b9250610f4660408701610e7d565b949793965091946060013592915050565b600060208284031215610f6957600080fd5b5035919050565b60008060408385031215610f8357600080fd5b82359150602083013560038110610f9957600080fd5b809150509250929050565b634e487b7160e01b600052601160045260246000fd5b80820180821115610fcd57610fcd610fa4565b92915050565b8183823760009101908152919050565b81810381811115610fcd57610fcd610fa4565b634e487b7160e01b600052602160045260246000fd5b8082028115828204841417610fcd57610fcd610fa4565b602081016003831061104557634e487b7160e01b600052602160045260246000fd5b9190529056fe68510e4a026e1e6eb57d0691a8904192605ae5f5c8c1e0c878bcfd8299f56132a26469706673582212201fbad578206d509b27c941e7a2e1ecffc93fe55bca96a521c72160d6d001f61264736f6c634300081c0033",
+  "devdoc": {
+    "errors": {
+      "OwnableInvalidOwner(address)": [
+        {
+          "details": "The owner is not a valid owner account. (eg. `address(0)`)"
+        }
+      ],
+      "OwnableUnauthorizedAccount(address)": [
+        {
+          "details": "The caller account is not authorized to perform an operation."
+        }
+      ]
+    },
+    "kind": "dev",
+    "methods": {
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      }
+    },
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 8,
+        "contract": "contracts/ORTBet.sol:ORTBet",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 186,
+        "contract": "contracts/ORTBet.sol:ORTBet",
+        "label": "userBalances",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 190,
+        "contract": "contracts/ORTBet.sol:ORTBet",
+        "label": "lockedStakes",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 195,
+        "contract": "contracts/ORTBet.sol:ORTBet",
+        "label": "games",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_bytes32,t_struct(Game)249_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bool": {
+        "encoding": "inplace",
+        "label": "bool",
+        "numberOfBytes": "1"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_bytes32,t_struct(Game)249_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => struct ORTBet.Game)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Game)249_storage"
+      },
+      "t_struct(Game)249_storage": {
+        "encoding": "inplace",
+        "label": "struct ORTBet.Game",
+        "members": [
+          {
+            "astId": 242,
+            "contract": "contracts/ORTBet.sol:ORTBet",
+            "label": "player1",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address"
+          },
+          {
+            "astId": 244,
+            "contract": "contracts/ORTBet.sol:ORTBet",
+            "label": "player2",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_address"
+          },
+          {
+            "astId": 246,
+            "contract": "contracts/ORTBet.sol:ORTBet",
+            "label": "stakeAmount",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 248,
+            "contract": "contracts/ORTBet.sol:ORTBet",
+            "label": "active",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_bool"
+          }
+        ],
+        "numberOfBytes": "128"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
