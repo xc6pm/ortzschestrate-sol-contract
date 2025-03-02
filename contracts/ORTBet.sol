@@ -7,6 +7,8 @@ contract ORTBet is Ownable {
     mapping(address => uint256) public userBalances;
     mapping(address => uint256) public lockedStakes;
     mapping(bytes32 => Game) public games;
+    uint256 public constant feeRate = 3;
+    uint256 public feesCollected;
 
     event StakesDeposited(address indexed player, uint256 amount);
     event StakesWithdrawn(address indexed player, uint256 amount);
@@ -37,7 +39,9 @@ contract ORTBet is Ownable {
 
     function depositStakes() external payable {
         require(msg.value > 0, "Deposit amount must be greater than 0.");
-        userBalances[msg.sender] += msg.value;
+        uint256 fee = calculateFee(msg.value);
+        userBalances[msg.sender] += msg.value - fee;
+        feesCollected += fee;
         emit StakesDeposited(msg.sender, msg.value);
     }
 
@@ -76,21 +80,25 @@ contract ORTBet is Ownable {
             "Player2 has insufficient funds."
         );
 
+        // Calculate game starting fee
+        uint256 feeFromEachPlayer = calculateFee(_stakeAmount) / 2;
+        uint256 stakeAfterFeeDeduction = _stakeAmount - feeFromEachPlayer;
         // Lock stakes
-        userBalances[_player1] -= _stakeAmount;
-        userBalances[_player2] -= _stakeAmount;
-        lockedStakes[_player1] += _stakeAmount;
-        lockedStakes[_player2] += _stakeAmount;
+        userBalances[_player1] -= stakeAfterFeeDeduction;
+        userBalances[_player2] -= stakeAfterFeeDeduction;
+        lockedStakes[_player1] += stakeAfterFeeDeduction;
+        lockedStakes[_player2] += stakeAfterFeeDeduction;
+        feesCollected += feeFromEachPlayer * 2;
 
         games[gameIdHash] = Game({
             player1: _player1,
             player2: _player2,
-            stakeAmount: _stakeAmount,
+            stakeAmount: stakeAfterFeeDeduction,
             active: true
         });
 
-        emit StakesLocked(_player1, _stakeAmount);
-        emit StakesLocked(_player2, _stakeAmount);
+        emit StakesLocked(_player1, stakeAfterFeeDeduction);
+        emit StakesLocked(_player2, stakeAfterFeeDeduction);
         emit GameStarted(gameIdHash, _player1, _player2, _stakeAmount);
     }
 
@@ -127,6 +135,10 @@ contract ORTBet is Ownable {
 
         // Emit the game resolved event
         emit GameResolved(_gameId, _result);
+    }
+
+    function calculateFee(uint256 _amount) public pure returns (uint256) {
+        return (_amount / 10000) * feeRate;
     }
 
     receive() external payable {
