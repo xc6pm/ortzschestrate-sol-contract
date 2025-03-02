@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/media/hossein/Files/Dev/ortzschestrate-sol-contract/contracts/ORTBet.sol": {
-      "lastModificationDate": 1740914713463,
-      "contentHash": "5f3e16d8010c9083480ce9d781376fef",
+      "lastModificationDate": 1740919117780,
+      "contentHash": "c546e7b5ead9d06c16588bf519426fa7",
       "sourceName": "contracts/ORTBet.sol",
       "solcConfig": {
         "version": "0.8.28",

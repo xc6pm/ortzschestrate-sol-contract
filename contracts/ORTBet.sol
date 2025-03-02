@@ -137,6 +137,13 @@ contract ORTBet is Ownable {
         emit GameResolved(_gameId, _result);
     }
 
+    function withdrawFees(uint256 _amount) external onlyOwner {
+        require(feesCollected >= _amount, "Insufficient fees collected.");
+
+        feesCollected -= _amount;
+        payable(msg.sender).transfer(_amount);
+    }
+
     function calculateFee(uint256 _amount) public pure returns (uint256) {
         return (_amount / 10000) * feeRate;
     }
