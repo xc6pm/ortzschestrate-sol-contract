@@ -3,6 +3,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types"
 import fs, { writeFile } from "fs"
 
 const frontendExportPath = process.env.FRONTEND_EXPORT_PATH
+const apiExportPath = process.env.API_EXPORT_PATH
 const DEPLOYMENTS_DIR = "./deployments"
 
 const deployORTBet: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
@@ -38,14 +39,23 @@ const deployORTBet: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     `${frontendExportPath}/ORTBet.json`,
   )
 
+  // Export for api
+  if (!fs.existsSync(`${apiExportPath}`)) {
+    fs.mkdirSync(`${apiExportPath}`)
+  }
+  fs.copyFileSync(
+    `${DEPLOYMENTS_DIR}/${hre.network.name}/ORTBet.json`,
+    `${apiExportPath}/ORTBet.json`,
+  )
+
   console.log("Deployment artifacts copied.")
 
   const ortBet = await hre.ethers.getContractAt("ORTBet", deployResult.address)
 
-  // console.log("transferring ownership...")
-  // const ownerTx = await ortBet.transferOwnership("")
-  // console.log("confirming...")
-  // ownerTx.
+  console.log("transferring ownership...")
+  const owner = "0xB1A5A3B36213889C29738bbe1f83b3983FfE46e5"
+  await ortBet.transferOwnership(owner)
+  console.log("transferred ownership to " + owner)
 }
 
 export default deployORTBet
