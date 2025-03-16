@@ -42,7 +42,7 @@ contract ORTBet is Ownable {
         uint256 fee = calculateFee(msg.value);
         userBalances[msg.sender] += msg.value - fee;
         feesCollected += fee;
-        emit StakesDeposited(msg.sender, msg.value);
+        emit StakesDeposited(msg.sender, msg.value - fee);
     }
 
     function withdrawStakes(uint256 amount) external {
