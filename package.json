@@ -4,7 +4,7 @@
   "scripts": {
     "chain": "hardhat node --network hardhat --no-deploy",
     "compile": "hardhat compile",
-    "deploy": "ts-node scripts/runHardhatDeploy.ts"
+    "deploy": "hardhat deploy"
   },
   "main": "index.js",
   "repository": "https://github.com/xc6pm/ortzschestrate",

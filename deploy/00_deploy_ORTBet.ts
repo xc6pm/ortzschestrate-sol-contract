@@ -2,11 +2,12 @@ import { DeployFunction } from "hardhat-deploy/dist/types"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import fs, { writeFile } from "fs"
 
-const frontendExportPath = process.env.FRONTEND_EXPORT_PATH
-const apiExportPath = process.env.API_EXPORT_PATH
 const DEPLOYMENTS_DIR = "./deployments"
 
 const deployORTBet: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
+  const dev = hre.network.name === "localhost" ? "/dev" : ""
+  const frontendExportPath = process.env.FRONTEND_EXPORT_PATH + dev
+  const apiExportPath = process.env.API_EXPORT_PATH + dev
   const { deployer } = await hre.getNamedAccounts()
   const { deploy } = hre.deployments
 
