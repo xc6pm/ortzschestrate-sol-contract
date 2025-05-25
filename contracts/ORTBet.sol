@@ -7,7 +7,7 @@ contract ORTBet is Ownable {
     mapping(address => uint256) public userBalances;
     mapping(address => uint256) public lockedStakes;
     mapping(bytes32 => Game) public games;
-    uint256 public constant feeRate = 3;
+    uint256 public constant feePercentage = 3;
     uint256 public feesCollected;
 
     event StakesDeposited(address indexed player, uint256 amount);
@@ -39,10 +39,8 @@ contract ORTBet is Ownable {
 
     function depositStakes() external payable {
         require(msg.value > 0, "Deposit amount must be greater than 0.");
-        uint256 fee = calculateFee(msg.value);
-        userBalances[msg.sender] += msg.value - fee;
-        feesCollected += fee;
-        emit StakesDeposited(msg.sender, msg.value - fee);
+        userBalances[msg.sender] += msg.value;
+        emit StakesDeposited(msg.sender, msg.value);
     }
 
     function withdrawStakes(uint256 amount) external {
@@ -145,7 +143,7 @@ contract ORTBet is Ownable {
     }
 
     function calculateFee(uint256 _amount) public pure returns (uint256) {
-        return (_amount / 10000) * feeRate;
+        return (_amount / 100) * feePercentage;
     }
 
     receive() external payable {
