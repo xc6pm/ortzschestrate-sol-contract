@@ -1,17 +1,28 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.10;
+pragma solidity ^0.8.12;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract ORTBet is Ownable {
     mapping(address => uint256) public userBalances;
     mapping(address => uint256) public lockedStakes;
     mapping(bytes32 => Game) public games;
+    mapping(address => address[]) public backupAddresses;
     uint256 public constant feePercentage = 3;
+    uint256 public constant maxBackupAddresses = 3;
     uint256 public feesCollected;
 
-    event StakesDeposited(address indexed player, uint256 amount);
-    event StakesWithdrawn(address indexed player, uint256 amount);
+    event StakesDeposited(
+        address indexed player,
+        address indexed depositAddress,
+        uint256 amount
+    );
+    event StakesWithdrawn(
+        address indexed player,
+        address indexed withdrawalAddress,
+        uint256 amount
+    );
     event StakesLocked(address indexed player, uint256 amount);
     event StakesUnlocked(address indexed player, uint256 amount);
     event GameStarted(
@@ -21,6 +32,15 @@ contract ORTBet is Ownable {
         uint256 stakeAmount
     );
     event GameResolved(bytes32 indexed gameId, GameResult result);
+    event BackupAddressAdded(
+        address indexed backupAddress,
+        address indexed owner
+    );
+    event BackupAddressRemoved(
+        address indexed backupAddress,
+        address indexed owner
+    );
+    event FeesWithdrawn(address indexed owner, uint256 amount);
 
     enum GameResult {
         Draw,
@@ -32,7 +52,7 @@ contract ORTBet is Ownable {
         address player1;
         address player2;
         uint256 stakeAmount;
-        bool active;
+        bool ongoing;
     }
 
     constructor() Ownable(msg.sender) {}
@@ -40,19 +60,43 @@ contract ORTBet is Ownable {
     function depositStakes() external payable {
         require(msg.value > 0, "Deposit amount must be greater than 0.");
         userBalances[msg.sender] += msg.value;
-        emit StakesDeposited(msg.sender, msg.value);
+        emit StakesDeposited(msg.sender, msg.sender, msg.value);
     }
 
-    function withdrawStakes(uint256 amount) external {
-        require(amount > 0, "Withdrawal amount must be greater than 0.");
+    function depositStakes(
+        address _mainAddress
+    ) external payable onlyBackupAddress(_mainAddress) {
+        require(msg.value > 0, "Deposit amount must be greater than 0.");
+
+        userBalances[_mainAddress] += msg.value;
+        emit StakesDeposited(_mainAddress, msg.sender, msg.value);
+    }
+
+    function withdrawStakes(uint256 _amount) external {
+        require(_amount > 0, "Withdrawal amount must be greater than 0.");
         require(
-            userBalances[msg.sender] >= amount,
+            userBalances[msg.sender] >= _amount,
             "Insufficient funds to withdraw."
         );
 
-        userBalances[msg.sender] -= amount;
-        payable(msg.sender).transfer(amount);
-        emit StakesWithdrawn(msg.sender, amount);
+        userBalances[msg.sender] -= _amount;
+        payable(msg.sender).transfer(_amount);
+        emit StakesWithdrawn(msg.sender, msg.sender, _amount);
+    }
+
+    function withdrawStakes(
+        uint256 _amount,
+        address _mainAddress
+    ) external onlyBackupAddress(_mainAddress) {
+        require(_amount > 0, "Withdrawal amount must be greater than 0.");
+        require(
+            userBalances[_mainAddress] >= _amount,
+            "Insufficient funds to withdraw."
+        );
+
+        userBalances[_mainAddress] -= _amount;
+        payable(msg.sender).transfer(_amount);
+        emit StakesWithdrawn(_mainAddress, msg.sender, _amount);
     }
 
     function startGame(
@@ -92,7 +136,7 @@ contract ORTBet is Ownable {
             player1: _player1,
             player2: _player2,
             stakeAmount: stakeAfterFeeDeduction,
-            active: true
+            ongoing: true
         });
 
         emit StakesLocked(_player1, stakeAfterFeeDeduction);
@@ -105,7 +149,7 @@ contract ORTBet is Ownable {
         GameResult _result
     ) external onlyOwner {
         require(
-            games[_gameId].active,
+            games[_gameId].ongoing,
             "Game either not created or is already finished."
         );
         Game storage game = games[_gameId];
@@ -129,10 +173,61 @@ contract ORTBet is Ownable {
             emit StakesUnlocked(game.player2, game.stakeAmount);
         }
 
-        game.active = false;
+        game.ongoing = false;
 
         // Emit the game resolved event
         emit GameResolved(_gameId, _result);
+    }
+
+    function addBackupAddress(address _backupAddress) external {
+        require(
+            backupAddresses[msg.sender].length < maxBackupAddresses,
+            string(
+                abi.encodePacked(
+                    "Cannot add more than ",
+                    Strings.toString(maxBackupAddresses),
+                    " backup addresses."
+                )
+            )
+        );
+        require(
+            _backupAddress != address(0),
+            "Backup address cannot be zero address."
+        );
+        require(
+            _backupAddress != msg.sender,
+            "Cannot set self as backup address."
+        );
+        require(
+            !contains(backupAddresses[msg.sender], _backupAddress),
+            "Backup address already added."
+        );
+
+        backupAddresses[msg.sender].push(_backupAddress);
+        emit BackupAddressAdded(_backupAddress, msg.sender);
+    }
+
+    function removeBackupAddress(address _backupAddress) external {
+        require(
+            contains(backupAddresses[msg.sender], _backupAddress),
+            "Not authorized to remove this recovery address."
+        );
+
+        address[] storage backups = backupAddresses[msg.sender];
+        for (uint i = 0; i < backups.length; i++) {
+            if (backups[i] == _backupAddress) {
+                backups[i] = backups[backups.length - 1];
+                backups.pop();
+                emit BackupAddressRemoved(_backupAddress, msg.sender);
+                return;
+            }
+        }
+    }
+
+    function getBackupAddresses(
+        address _mainAddress
+    ) external view returns (address[] memory) {
+        return backupAddresses[_mainAddress];
     }
 
     function withdrawFees(uint256 _amount) external onlyOwner {
@@ -140,14 +235,19 @@ contract ORTBet is Ownable {
 
         feesCollected -= _amount;
         payable(msg.sender).transfer(_amount);
+        emit FeesWithdrawn(msg.sender, _amount);
     }
 
     function calculateFee(uint256 _amount) public pure returns (uint256) {
-        return (_amount / 100) * feePercentage;
+        return (_amount * feePercentage) / 100;
     }
 
     receive() external payable {
         revert("Direct deposits not allowed.");
+    }
+
+    fallback() external payable {
+        revert("Function does not exist.");
     }
 
     function getBalance(address _userAddress) external view returns (uint256) {
@@ -162,5 +262,26 @@ contract ORTBet is Ownable {
 
     function getGame(bytes32 _gameId) external view returns (Game memory) {
         return games[_gameId];
+    }
+
+    function contains(
+        address[] storage _list,
+        address _target
+    ) internal view returns (bool) {
+        for (uint i = 0; i < _list.length; i++) {
+            if (_list[i] == _target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    modifier onlyBackupAddress(address _mainAddress) {
+        require(
+            contains(backupAddresses[_mainAddress], msg.sender),
+            "Caller is not a registered backup address."
+        );
+
+        _;
     }
 }
