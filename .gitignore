@@ -1,3 +1,7 @@
 node_modules
 deployments/localhost
 .env
+
+typechain-types/
+artifacts/
+cache/
