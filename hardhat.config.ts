@@ -3,7 +3,7 @@ import { HardhatUserConfig } from "hardhat/config"
 import "@nomicfoundation/hardhat-toolbox"
 import "@nomicfoundation/hardhat-ethers"
 import "hardhat-deploy"
-import "hardhat-deploy-ethers"
+import "@nomicfoundation/hardhat-verify";
 
 const alchmeyApiKey = process.env.ALCHEMY_API_KEY
 const deployerPrivateKey =
@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
       },
     },
     sepolia: {
-      url: `https://eth-sepolia.g.alchemy.com/v2/${alchmeyApiKey}`,
+      url: `https://ethereum-sepolia-rpc.publicnode.com`,
       accounts: [deployerPrivateKey],
       chainId: 11155111,
     },
@@ -53,6 +53,9 @@ const config: HardhatUserConfig = {
   mocha: {
     timeout: 40000,
   },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY,
+  }
 }
 
 export default config
