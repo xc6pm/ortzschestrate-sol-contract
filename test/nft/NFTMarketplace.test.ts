@@ -35,12 +35,12 @@ describe("NietzschessNFTMarketplace", function () {
     const { marketplace, nft, owner, seller, buyer, user1, user2 } =
       await loadFixture(deployMarketplaceFixture)
 
-    // Mint NFT to seller
-    const tokenId = 0
-    await nft.connect(owner).safeMint(seller.address, tokenId)
+    // Mint NFT to seller (returns auto-incremented tokenId)
+    const tokenId = await nft.connect(owner).safeMint.staticCall(seller.address, "test-metadata-1")
+    await nft.connect(owner).safeMint(seller.address, "test-metadata-1")
 
     // Approve marketplace to handle NFT
-    await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
+    await nft.connect(seller).approve(await marketplace.getAddress(), Number(tokenId))
 
     // List the item
     const price = ethers.parseEther("1.0")
@@ -48,7 +48,7 @@ describe("NietzschessNFTMarketplace", function () {
       .connect(seller)
       .listItem(
         await nft.getAddress(),
-        tokenId,
+        Number(tokenId),
         price,
         "ipfs://test-metadata-1",
       )
@@ -61,7 +61,7 @@ describe("NietzschessNFTMarketplace", function () {
       buyer,
       user1,
       user2,
-      tokenId,
+      tokenId: Number(tokenId),
       price,
     }
   }
@@ -141,7 +141,7 @@ describe("NietzschessNFTMarketplace", function () {
 
       // Mint NFT to seller (only owner can mint)
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
 
       // Approve marketplace
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
@@ -191,7 +191,7 @@ describe("NietzschessNFTMarketplace", function () {
       await unapprovedNFT.waitForDeployment()
 
       const tokenId = 0
-      await unapprovedNFT.connect(owner).safeMint(seller.address, tokenId)
+      await unapprovedNFT.connect(owner).safeMint(seller.address, "test-nft-uri")
       await unapprovedNFT
         .connect(seller)
         .approve(await marketplace.getAddress(), tokenId)
@@ -214,7 +214,7 @@ describe("NietzschessNFTMarketplace", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
 
       await expect(
         marketplace
@@ -234,7 +234,7 @@ describe("NietzschessNFTMarketplace", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       await expect(
@@ -267,7 +267,7 @@ describe("NietzschessNFTMarketplace", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       // Pause marketplace
@@ -599,7 +599,7 @@ describe("NietzschessNFTMarketplace", function () {
       const { nft, owner, user1 } = await loadFixture(deployMarketplaceFixture)
 
       const tokenId = 0
-      await expect(nft.connect(owner).safeMint(user1.address, tokenId))
+      await expect(nft.connect(owner).safeMint(user1.address, "test-nft-uri"))
         .to.emit(nft, "Transfer")
         .withArgs(ethers.ZeroAddress, user1.address, tokenId)
 
@@ -610,7 +610,7 @@ describe("NietzschessNFTMarketplace", function () {
       const { nft, user1, user2 } = await loadFixture(deployMarketplaceFixture)
 
       await expect(
-        nft.connect(user1).safeMint(user2.address, 0),
+        nft.connect(user1).safeMint(user2.address, "test-nft-uri"),
       ).to.be.revertedWithCustomError(nft, "OwnableUnauthorizedAccount")
     })
 
@@ -621,7 +621,7 @@ describe("NietzschessNFTMarketplace", function () {
 
       // Mint to a user
       const tokenId = 0
-      await nft.connect(owner).safeMint(user1.address, tokenId)
+      await nft.connect(owner).safeMint(user1.address, "test-nft-uri")
 
       // User approves and lists
       await nft.connect(user1).approve(await marketplace.getAddress(), tokenId)
@@ -650,7 +650,7 @@ describe("NietzschessNFTMarketplace", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(owner.address, tokenId)
+      await nft.connect(owner).safeMint(owner.address, "test-nft-uri")
 
       await nft.connect(owner).approve(await marketplace.getAddress(), tokenId)
       await marketplace
@@ -833,7 +833,7 @@ describe("NietzschessNFTMarketplace", function () {
         )
 
         const tokenId = 0
-        await nft.connect(owner).safeMint(seller.address, tokenId)
+        await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
 
         await expect(
           marketplace
@@ -913,7 +913,7 @@ describe("NietzschessNFTMarketplace", function () {
         )
 
         const tokenId = 0
-        await nft.connect(owner).safeMint(seller.address, tokenId)
+        await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
         await nft
           .connect(seller)
           .approve(await marketplace.getAddress(), tokenId)
@@ -945,7 +945,7 @@ describe("NietzschessNFTMarketplace", function () {
         )
 
         const tokenId = 0
-        await nft.connect(owner).safeMint(seller.address, tokenId)
+        await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
         await nft
           .connect(seller)
           .approve(await marketplace.getAddress(), tokenId)
@@ -1006,7 +1006,7 @@ describe("NietzschessNFTMarketplace", function () {
         )
 
         const tokenId = 0
-        await nft.connect(owner).safeMint(seller.address, tokenId)
+        await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
 
         // Try to list without approval - should fail on transfer check
         await expect(
@@ -1057,7 +1057,7 @@ describe("NietzschessNFTMarketplace", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       const price = ethers.parseEther("1.0")

@@ -35,7 +35,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
 
     // Mint NFT to seller
     const tokenId = 0
-    await nft.connect(owner).safeMint(seller.address, tokenId)
+    await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
 
     // Approve marketplace to handle NFT
     await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
@@ -126,7 +126,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
 
       // Attacker tries to list seller's NFT
       await expect(
@@ -195,7 +195,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
 
       // Don't approve marketplace
       await expect(
@@ -301,7 +301,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
       const maxPrice = ethers.MaxUint256
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       // This should either revert or handle correctly
@@ -429,7 +429,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
       // List many items
       const itemCount = 50
       for (let i = 0; i < itemCount; i++) {
-        await nft.connect(owner).safeMint(seller.address, i)
+        await nft.connect(owner).safeMint(seller.address, `test-nft-uri-${i}`)
         await nft.connect(seller).approve(await marketplace.getAddress(), i)
         await marketplace
           .connect(seller)
@@ -457,7 +457,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       const minPrice = 1n // 1 wei
@@ -480,7 +480,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       await expect(
@@ -502,7 +502,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
 
       const longMetadata = "ipfs://" + "a".repeat(1000)
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       await expect(
@@ -523,7 +523,7 @@ describe("NietzschessNFTMarketplace - Advanced Security Tests", function () {
       )
 
       const tokenId = 0
-      await nft.connect(owner).safeMint(seller.address, tokenId)
+      await nft.connect(owner).safeMint(seller.address, "test-nft-uri")
       await nft.connect(seller).approve(await marketplace.getAddress(), tokenId)
 
       // List and delist multiple times
