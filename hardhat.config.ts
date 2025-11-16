@@ -3,7 +3,7 @@ import { HardhatUserConfig } from "hardhat/config"
 import "@nomicfoundation/hardhat-toolbox"
 import "@nomicfoundation/hardhat-ethers"
 import "hardhat-deploy"
-import "@nomicfoundation/hardhat-verify";
+import "@nomicfoundation/hardhat-verify"
 
 const alchmeyApiKey = process.env.ALCHEMY_API_KEY
 const deployerPrivateKey =
@@ -23,6 +23,11 @@ const config: HardhatUserConfig = {
       url: `https://ethereum-sepolia-rpc.publicnode.com`,
       accounts: [deployerPrivateKey],
       chainId: 11155111,
+    },
+    polygonAmoy: {
+      url: `https://rpc-amoy.polygon.technology`,
+      accounts: [deployerPrivateKey],
+      chainId: 80002,
     },
   },
   namedAccounts: {
@@ -54,8 +59,22 @@ const config: HardhatUserConfig = {
     timeout: 40000,
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  }
+    apiKey: process.env.ETHERSCAN_API_KEY || "",
+    customChains: [
+      {
+        network: "polygonAmoy",
+        chainId: 80002,
+        urls: {
+          apiURL:
+            "https://api.etherscan.io/v2/api?chainid=80002&action=balance&apikey=" +
+            process.env.ETHERSCAN_API_KEY,
+          browserURL:
+            "https://api.etherscan.io/v2/api?chainid=80002&action=balance&apikey=" +
+            process.env.ETHERSCAN_API_KEY,
+        },
+      },
+    ],
+  },
 }
 
 export default config
